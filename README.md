@@ -3,6 +3,8 @@
 A modern, feature-rich cryptocurrency dashboard built with Next.js 15, TypeScript, and Tailwind CSS. Track real-time cryptocurrency prices, view interactive charts, and manage your personal watchlist.
 
 ![Crypto Dashboard Preview](public/Dashboard.png)
+
+
 ![Crypto Dashboard Preview](public/crypto_info.png)
 
 ## ✨ Features

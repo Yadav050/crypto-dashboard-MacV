@@ -55,6 +55,19 @@ export interface MarketChartData {
   total_volumes: [number, number][];
 }
 
+export interface SearchCoin {
+  id: string;
+  name: string;
+  symbol: string;
+  market_cap_rank: number;
+  thumb: string;
+  large: string;
+}
+
+export interface SearchResponse {
+  coins: SearchCoin[];
+}
+
 // Utility function to ensure numeric values
 const ensureNumber = (value: number | string | null | undefined): number => {
   const num = Number(value);
@@ -170,16 +183,20 @@ export const getMarketChart = async (
 
 export const searchCoins = async (query: string): Promise<Coin[]> => {
   try {
-    const response = await coingeckoApi.get('/search', {
+    const response = await coingeckoApi.get<SearchResponse>('/search', {
       params: {
         query: query,
       },
     });
     
     // Get detailed data for the first 10 results
-    const coinIds = response.data.coins.slice(0, 10).map((coin: { id: string }) => coin.id).join(',');
+    const coinIds = response.data.coins
+      .slice(0, 10)
+      .map((coin: SearchCoin) => coin.id)
+      .join(',');
+
     if (coinIds) {
-      const detailedResponse = await coingeckoApi.get('/coins/markets', {
+      const detailedResponse = await coingeckoApi.get<Coin[]>('/coins/markets', {
         params: {
           vs_currency: 'usd',
           ids: coinIds,

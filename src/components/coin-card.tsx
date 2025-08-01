@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Star } from 'lucide-react';
 import { Coin } from '@/lib/api';
 import { formatCurrency, formatNumber, formatPercentage, isInWatchlist, addToWatchlist, removeFromWatchlist } from '@/lib/utils';
@@ -36,10 +37,12 @@ export function CoinCard({ coin, onWatchlistToggle }: CoinCardProps) {
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow cursor-pointer">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-3">
-            <img 
+            <Image 
               src={coin.image} 
               alt={coin.name}
-              className="w-8 h-8 rounded-full"
+              width={32}
+              height={32}
+              className="rounded-full"
             />
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white">

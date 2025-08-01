@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Star, ArrowLeft, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function CoinDetailPage() {
   const params = useParams();
@@ -19,27 +20,6 @@ export default function CoinDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isWatched, setIsWatched] = useState(false);
-
-  const fetchCoinData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const [coinData, chartData] = await Promise.all([
-        getCoinDetail(coinId),
-        getMarketChart(coinId, 7) // Default to 7 days
-      ]);
-      
-      setCoin(coinData);
-      setChartData(chartData);
-      setIsWatched(isInWatchlist(coinId));
-    } catch (err) {
-      setError('Failed to fetch coin data. Please try again.');
-      console.error('Error fetching coin data:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleWatchlistToggle = () => {
     if (isWatched) {
@@ -53,6 +33,27 @@ export default function CoinDetailPage() {
 
   useEffect(() => {
     if (coinId) {
+      const fetchCoinData = async () => {
+        try {
+          setLoading(true);
+          setError(null);
+          
+          const [coinData, chartData] = await Promise.all([
+            getCoinDetail(coinId),
+            getMarketChart(coinId, 7) // Default to 7 days
+          ]);
+          
+          setCoin(coinData);
+          setChartData(chartData);
+          setIsWatched(isInWatchlist(coinId));
+        } catch (err) {
+          setError('Failed to fetch coin data. Please try again.');
+          console.error('Error fetching coin data:', err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      
       fetchCoinData();
     }
   }, [coinId]);
@@ -61,7 +62,25 @@ export default function CoinDetailPage() {
     return (
       <div className="text-center py-12">
         <div className="text-red-600 mb-4">{error}</div>
-        <Button onClick={fetchCoinData}>Try Again</Button>
+        <Button onClick={() => {
+          if (coinId) {
+            setLoading(true);
+            setError(null);
+            Promise.all([
+              getCoinDetail(coinId),
+              getMarketChart(coinId, 7)
+            ]).then(([coinData, chartData]) => {
+              setCoin(coinData);
+              setChartData(chartData);
+              setIsWatched(isInWatchlist(coinId));
+              setLoading(false);
+            }).catch((err) => {
+              setError('Failed to fetch coin data. Please try again.');
+              console.error('Error fetching coin data:', err);
+              setLoading(false);
+            });
+          }
+        }}>Try Again</Button>
       </div>
     );
   }
@@ -106,10 +125,12 @@ export default function CoinDetailPage() {
             </Button>
           </Link>
           <div className="flex items-center space-x-3">
-            <img 
+            <Image 
               src={coin.image} 
               alt={coin.name}
-              className="w-10 h-10 rounded-full"
+              width={40}
+              height={40}
+              className="rounded-full"
             />
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -234,4 +255,4 @@ export default function CoinDetailPage() {
       </div>
     </div>
   );
-} 
+}

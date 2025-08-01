@@ -56,7 +56,7 @@ export interface MarketChartData {
 }
 
 // Utility function to ensure numeric values
-const ensureNumber = (value: any): number => {
+const ensureNumber = (value: number | string | null | undefined): number => {
   const num = Number(value);
   return isNaN(num) ? 0 : num;
 };
@@ -75,7 +75,7 @@ export const getMarkets = async (page: number = 1, perPage: number = 50): Promis
     });
     
     // Ensure numeric values are valid
-    return response.data.map((coin: any) => ({
+    return response.data.map((coin: Partial<Coin>) => ({
       ...coin,
       current_price: ensureNumber(coin.current_price),
       market_cap: ensureNumber(coin.market_cap),

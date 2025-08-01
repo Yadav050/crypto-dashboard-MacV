@@ -31,7 +31,7 @@ export function PriceChart({ data, coinName }: PriceChartProps) {
 
   const CustomTooltip = ({ active, payload, label }: {
     active?: boolean;
-    payload?: Array<{ value: number }>;
+    payload?: Array<{ value: number; payload: { date: string; price: number; time: number } }>;
     label?: string;
   }) => {
     if (active && payload && payload.length) {

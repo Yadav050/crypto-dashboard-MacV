@@ -4,6 +4,9 @@ A modern, feature-rich cryptocurrency dashboard built with Next.js 15, TypeScrip
 
 ![Crypto Dashboard Preview](public/Dashboard.png)
 
+
+![Crypto Dashboard Preview](public/crypto_info.png)
+
 ## ✨ Features
 
 - **💹 Live Market Data**: Real-time cryptocurrency prices and market information via CoinGecko API
